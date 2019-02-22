@@ -1,0 +1,109 @@
+<div class="container">
+    <div (bookObj) = 'random($event)'>
+        <form class="form-horizontal">
+            <input type = "hidden" [(ngModel)] = "book.id" name = "sach_id" /> 
+            <div class="form-group">
+                <label class="control-label col-sm-2">NAME</label>
+                <div class="col-sm-8">
+                    <input type = "text" [(ngModel)] = "book.ten" name = "ten" class="form-control" />
+                </div>    
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">DESCRIPTION</label>
+                <div class="col-sm-8">
+                        <input type = "text" [(ngModel)] = "book.mota" name = "mota" class="form-control" />
+                </div>    
+            </div>
+
+            <!-- <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".pdf,.doc,.docx"> -->
+
+    
+
+              <div class="form-group">
+                <label class="control-label col-sm-2">File</label>
+                <div class="input-group">
+                  <div class="input-group-addon">
+                    <i class="fa fa-code"></i>
+                  </div>
+                  <input type="text" class="form-control" [(ngModel)]="book.file" name = "file" placeholder="Upload Attach Plan" disabled *ngIf="attachPlanStatus.hasData">
+                  <input class="form-control pull-right" type="file" (change)="attachPlanChanged($event)" [(ngModel)]="book.file" name="file" *ngIf="!attachPlanStatus.hasData">
+                  <button type="button" *ngIf="attachPlanStatus.hasData" (click)="removeAttachPlan()" class="btn btn-success">
+                    <i class="fa fa-times" aria-hidden="true" title="Clear"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".pdf,.doc,.docx"> -->
+              <!-- <input type="file" id="file" (change)="onFileChange($event)" #file> -->
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <button (click) = "addBook()" class = "btn btn-primary">Add Book</button>
+                </div>
+            </div>
+        </form>
+    </div> 
+    <div>
+        <table class = "table table-striped table-bordered">
+            <tr style = "background: lightblue;">
+                <th>ID</th>
+                <th>TIÊU ĐỀ</th>
+                <th>MÔ TẢ</th>
+                <th>ACTIONS</th>
+            </tr>
+            <tr *ngFor = "let book of books">
+                <td>{{book.id}}</td>
+                <td>{{book.ten}}</td>
+                <td>{{book.mota}}</td>
+                <td>
+                    <button (click) = "getBook(book.id)" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-edit"></span></button>      
+                    &nbsp;|&nbsp;
+                    <button (click) = "deleteBook(book.id)" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-trash"></span></button>
+                </td>
+            </tr>
+            <tr *ngIf = "books && books.length == 0">
+                <td colspan = "4">No records found!</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="box-footer clearfix" *ngIf="pager.pages && pager.pages.length">
+        <!-- <span class="pull-left">Showing {{pager.currentPage * pageSize + 1}} to {{(pager.currentPage + 1) * pageSize
+          <= totalItems ? (pager.currentPage + 1) * pageSize : totalItems }} of {{totalItems}} entries</span> -->
+    
+          <span class="pull-left">
+              Showing {{(currentPage*pageSize) + 1}} to {{(currentPage*pageSize) + books.length}} of {{totalItems}} entries
+          </span>
+        <ul class="pagination pagination-sm no-margin pull-right">
+          <li [ngClass]="{disabled:pager.currentPage === 0}" title="First Page">
+            <a aria-label="First" (click)="(pager.currentPage !== 0) && setPage(0)" class="page-link">
+              <i class="fa fa-step-backward" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li [ngClass]="{disabled:pager.currentPage === 0}" title="Previous Page">
+            <a aria-label="Previous" (click)="(pager.currentPage !== 0) && setPage(pager.currentPage - 1)"
+               class="page-link">
+              <i class="fa fa-chevron-left" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page - 1}">
+            <a (click)="setPage(page-1)" class="page-link">{{page}}</a>
+          </li>
+          <li [ngClass]="{disabled:pager.currentPage + 1 === pager.totalPages}" title="Next Page">
+            <a aria-label="Next" (click)="(pager.currentPage + 1 !== pager.totalPages) && setPage(pager.currentPage + 1)"
+               class="page-link">
+              <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li [ngClass]="{disabled:pager.currentPage + 1 === pager.totalPages}" title="Last Page">
+            <a aria-label="Last" (click)="(pager.currentPage + 1 !== pager.totalPages) && setPage(pager.totalPages - 1)"
+               class="page-link">
+              <i class="fa fa-step-forward" aria-hidden="true"></i>
+            </a>
+          </li>
+        </ul>
+    
+    
+      </div>
+
+</div>
